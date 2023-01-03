@@ -6,7 +6,7 @@ pub struct Article {
     source: Source,
     author: Option<String>,
     title: String,
-    description: String,
+    description: Option<String>,
     url: String,
     urlToImage: Option<String>,
     publishedAt: String,
@@ -20,15 +20,15 @@ impl Article {
             self.source.name, self.title, self.content, self.url
         )
     }
-    fn optional_value<'a, 'b>(author: &'a Option<String>, default: &'b str) -> &'b str
+    fn optional_value<'a, 'b>(value: &'a Option<String>, default: &'b str) -> &'b str
     where
         'a: 'b,
     {
-        let author = match author {
-            Some(ref author) => author.as_str(),
+        let value = match value {
+            Some(ref value) => value.as_str(),
             None => default,
         };
-        author
+        value
     }
     pub fn pretty_print(&self) {
         let author = Article::optional_value(&self.author, "No Author");
