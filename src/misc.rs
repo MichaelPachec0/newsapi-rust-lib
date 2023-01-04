@@ -1,14 +1,21 @@
+use std::convert::TryInto;
 use std::num::TryFromIntError;
 use std::time::Duration;
 
 /// Try and convert a type that implements the `TryFrom<u64>` to a duration by method chaining.
 /// the function `to_duration` returns a `Result` which allows for ? use.
-pub trait ToDuration<T: TryFrom<u64> = Self> {
-    fn to_duration(self) -> Result<Duration, TryFromIntError>;
+pub trait ToDuration<T>
+where
+    u64: TryFrom<T>,
+{
+    fn to_duration(self) -> Result<Duration, <u64 as TryFrom<T>>::Error>;
 }
 
-impl ToDuration for i32 {
-    fn to_duration(self) -> Result<Duration, TryFromIntError> {
+impl<T> ToDuration<T> for T
+where
+    u64: TryFrom<T>,
+{
+    fn to_duration(self) -> Result<Duration, <u64 as TryFrom<T>>::Error> {
         Ok(Duration::from_secs(u64::try_from(self)?))
     }
 }

@@ -3,6 +3,7 @@ use std::num::TryFromIntError;
 use std::time::Duration;
 
 use ureq::{serde_json, Agent};
+use crate::misc::ToDuration;
 
 pub mod misc;
 pub mod structs;
@@ -39,18 +40,6 @@ impl<'a> NewsApiLib<'a> {
     }
     pub fn change_topic(&mut self, topic: &str) {}
     pub fn change_api_key(&mut self, api_key: &'a str) {}
-}
-
-/// Try and convert a type that implements the `TryFrom<u64>` to a duration by method chaining.
-/// the function `to_duration` returns a `Result` which allows for ? use.
-trait ToDuration<T: TryFrom<u64> = Self> {
-    fn to_duration(self) -> Result<Duration, TryFromIntError>;
-}
-
-impl ToDuration for i32 {
-    fn to_duration(self) -> Result<Duration, TryFromIntError> {
-        Ok(Duration::from_secs(u64::try_from(self)?))
-    }
 }
 
 #[cfg(test)]
