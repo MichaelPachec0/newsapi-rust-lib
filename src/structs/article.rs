@@ -1,3 +1,4 @@
+use crate::misc;
 use colour::{blue_ln, dark_green_ln, green_ln, magenta_ln, yellow_ln};
 use serde::Deserialize;
 
@@ -14,24 +15,17 @@ pub struct Article {
 }
 impl Article {
     pub fn format(&self) -> String {
-        let author = Article::optional_value(&self.author, "No Author");
+        let binding = String::from("No Author");
+        let author = misc::optional_value(&self.author, &binding);
         format!(
             "\nFrom: {}\nAuthor: {author}\nTitle: {}\nContent: {}\n\tURL: {}",
             self.source.name, self.title, self.content, self.url
         )
     }
-    fn optional_value<'a, 'b>(value: &'a Option<String>, default: &'b str) -> &'b str
-    where
-        'a: 'b,
-    {
-        let value = match value {
-            Some(ref value) => value.as_str(),
-            None => default,
-        };
-        value
-    }
+
     pub fn pretty_print(&self) {
-        let author = Article::optional_value(&self.author, "No Author");
+        let binding = String::from("No Author");
+        let author = misc::optional_value(&self.author, &binding);
         dark_green_ln!("From: {}", self.source.name);
         yellow_ln!("Author: {}", author);
         blue_ln!("Title: {}", self.title);
